@@ -81,13 +81,13 @@ sub checktask
 
 	%method =
 	(
-		_get 			=> '/getTaskResult',
+		_get 		=> '/getTaskResult',
 	);
 
 	%sendit =
 	(
-			clientKey	=> $self->{_apikey},
-			taskId 		=> $task,
+		clientKey	=> $self->{_apikey},
+		taskId 		=> $task,
 	);
 
 	$json = encode_json \%sendit;
