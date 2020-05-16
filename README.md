@@ -4,7 +4,8 @@ Module to solving Google ReCaptchaV2
 
 http://api.anti-captcha.com/
 
-Bitcoin payment
+[api params](https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079089/NoCaptchaTask+Google+Recaptcha+puzzle+solving)
+
 
 ```perl
 use lib ".";
