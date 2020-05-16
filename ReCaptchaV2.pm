@@ -67,7 +67,11 @@ sub request
 	}
 	elsif ($method eq '/getTaskResult')
 	{
-		return $self->{_browser}->response()->decoded_content();
+		$rcvit->{errorId} == 0 ? return $self->{_browser}->response()->decoded_content() : return undef;
+	}
+	elsif ($method eq '/getBalance')
+	{
+		$rcvit->{errorId} == 0 ? return $rcvit->{balance} : return undef;
 	}
 }
 
@@ -138,7 +142,22 @@ sub waittask
 		$time += 5;
 	}
 
-	$time > 180 ? return 0 : return $res->{solution}->{gRecaptchaResponse};
+	$time > 180 ? return undef : return $res->{solution}->{gRecaptchaResponse};
+}
+
+sub getbalance
+{
+	my $self	= shift(@_);
+	my $task 	= shift(@_);
+
+	my %sendit;
+
+	%sendit =
+	(
+		clientKey	=> $self->{_apikey},
+	);
+
+	$self->request('/getBalance', \%sendit);
 }
 
 1;
@@ -199,5 +218,7 @@ print "".$res."\r\n";
 
 # waittask($task);
 # Return when response, only google site code
+
+$captcha->getbalance()
 
 return 0;
