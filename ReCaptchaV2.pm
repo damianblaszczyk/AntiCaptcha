@@ -100,8 +100,6 @@ sub createtask
 	for (keys % { $self->{opt} })
 	{$sendit{task}{$_} = $self->{opt}->{$_};}
 
-	print Dumper(\%sendit); use Data::Dumper;
-
 	$self->request('/createTask', \%sendit);
 }
 
@@ -168,35 +166,38 @@ version 1.00
 use lib ".";
 use ReCaptchaV2;
 
-	my $captcha;
-	my $res;
-	my $task;
-	my @tasks;
+my $captcha;
+my $res;
+my $task;
+my @tasks;
 
-	$captcha = new ReCaptchaV2
-	(
-		"apikey",
-		"domain.com",
-		"google-site-key",
-	);
+$captcha = new ReCaptchaV2
+(
+	"apikey",
+	"domain.com",
+	"google-site-key",
+);
 
-	$captcha->setopt({
+$captcha->setopt
+(
+	{
 		'proxyType'		=> 'http',
 		'proxyAddress'	=> 'x.x.x.x',
 		'proxyPort'		=> 'y.y.y.y',
 		'userAgent'		=> 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.141 Safari/537.36',
-		});
+	}
+);
 
-	$task = $captcha->createtask();
-	print "$task\r\n";
+$task = $captcha->createtask();
+print "$task\r\n";
 
-	sleep 150;
+sleep 150;
 
-	# Return JSON
-	$res = $captcha->checktask($task);
-	print "".$res."\r\n";
+# Return JSON
+$res = $captcha->checktask($task);
+print "".$res."\r\n";
 
-	# waittask($task);
-	# Return when response, only google site code
+# waittask($task);
+# Return when response, only google site code
 
-	return 0;
+return 0;
