@@ -10,8 +10,6 @@ Bitcoin payment
 use lib ".";
 use ReCaptchaV2;
 
-sub main
-{
 	my $captcha;
 	my $res;
 	my $task;
@@ -20,27 +18,31 @@ sub main
 	$captcha = new ReCaptchaV2
 	(
 		"apikey",
-		"https://domain.com",
-		"sitegooglekey",
+		"domain.com",
+		"google-site-key",
 	);
 
-	push(@tasks, $captcha->createtask());
+	$captcha->setopt
+	(
+		{
+			'proxyType'		=> 'http',
+			'proxyAddress'	=> 'x.x.x.x',
+			'proxyPort'		=> 'y.y.y.y',
+			'userAgent'		=> 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.141 Safari/537.36',
+		}
+	);
 
 	$task = $captcha->createtask();
-	!$task ? warn "Problem with create task\r\n" : push(@tasks, $task);
+	print "$task\r\n";
 
-	foreach (@tasks)
-	{
-		# Return JSON data
-		$res = $captcha->checktask($_);
-		print "[".$_."] ".$res."\r\n";
-	}
+	sleep 150;
 
-	# Return clean response key captcha
-	print "".$captcha->waittask($tasks[1])."\r\n";
+	# Return JSON
+	$res = $captcha->checktask($task);
+	print "".$res."\r\n";
+
+	# waittask($task);
+	# Return when response, only google site code
 
 	return 0;
-}
-
-main();
 ```  
