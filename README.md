@@ -45,5 +45,7 @@ use ReCaptchaV2;
 	# waittask($task);
 	# Return when response, only google site code
 
+	$captcha->getbalance()
+
 	return 0;
 ```  
