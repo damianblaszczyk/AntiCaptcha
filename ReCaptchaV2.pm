@@ -45,7 +45,7 @@ sub request
 	my $json;
 	my $rcvit;
 
-	$json = encode_json $sendit;
+	$json = JSON::encode_json $sendit;
 
 	$self->{_browser} = WWW::Mechanize->new();
 	$self->{_browser}->add_header
@@ -59,7 +59,7 @@ sub request
 		Content => $json
 	);
 
-	$rcvit = decode_json($self->{_browser}->response()->decoded_content());
+	$rcvit = JSON::decode_json($self->{_browser}->response()->decoded_content());
 
 	if ($method eq '/createTask')
 	{
@@ -133,7 +133,7 @@ sub waittask
 	while ($res->{status} ne "ready")
 	{
 		last if $time > 180;
-		$res = decode_json($self->checktask($task));
+		$res = JSON::decode_json($self->checktask($task));
 		sleep 5;
 		$time += 5;
 	}
@@ -182,7 +182,7 @@ $captcha->setopt
 (
 	{
 		'proxyType'		=> 'http',
-		'proxyAddress'	=> 'x.x.x.x',
+		'proxyAddress'		=> 'x.x.x.x',
 		'proxyPort'		=> 'y.y.y.y',
 		'userAgent'		=> 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.141 Safari/537.36',
 	}
