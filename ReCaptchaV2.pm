@@ -45,7 +45,7 @@ sub request
 	my $json;
 	my $rcvit;
 
-	$json = JSON::encode_json $sendit;
+	$json = encode_json $sendit;
 
 	$self->{_browser} = WWW::Mechanize->new();
 	$self->{_browser}->add_header
@@ -59,7 +59,7 @@ sub request
 		Content => $json
 	);
 
-	$rcvit = JSON::decode_json($self->{_browser}->response()->decoded_content());
+	$rcvit = decode_json $self->{_browser}->response()->decoded_content();
 
 	if ($method eq '/createTask')
 	{
@@ -137,7 +137,7 @@ sub waittask
 	while ($res->{status} ne "ready")
 	{
 		last if $time > 180;
-		$res = JSON::decode_json($self->checktask($task));
+		$res = decode_json $self->checktask($task);
 		sleep 5;
 		$time += 5;
 	}
