@@ -3,7 +3,7 @@ package ReCaptchaV2;
 use warnings;
 use strict;
 use Carp;
-use JSON;
+use JSON::MaybeXS;
 
 use WWW::Mechanize ();
 
