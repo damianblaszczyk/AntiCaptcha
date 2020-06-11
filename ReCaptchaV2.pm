@@ -6,12 +6,38 @@ use Carp;
 use JSON::MaybeXS;
 
 use WWW::Mechanize ();
+use Data::Dumper;
 
-#
-# Private methods
-#
+sub new
+{
+	my $class 	= shift(@_);
 
-my $_request = sub
+	my $self = 
+	{
+		_apikey 	=> shift(@_),
+		_domain 	=> shift(@_),
+		_keysite	=> shift(@_),
+		_url		=> 'http://api.anti-captcha.com/',
+	};
+
+	for (keys % { $self })
+	{ $self->{$_} or croak "".$_." is required."; }
+
+	bless $self => $class;
+
+	return $self;
+}
+
+sub setopt
+{
+	my $self	= shift(@_);
+	my $opts 	= shift(@_);
+
+	for (keys % { $opts })
+	{$self->{opt}->{$_} = $opts->{$_};}
+}
+
+sub request
 {
 	my $self	= shift(@_);
 	my $method 	= shift(@_);
@@ -36,6 +62,8 @@ my $_request = sub
 
 	$rcvit = decode_json $self->{_browser}->response()->decoded_content();
 
+	# print Dumper(\$rcvit);
+
 	if ($method eq '/createTask')
 	{
 		$rcvit->{errorId} == 0 ? return $rcvit->{taskId} : return undef;
@@ -48,39 +76,6 @@ my $_request = sub
 	{
 		$rcvit->{errorId} == 0 ? return $rcvit->{balance} : return undef;
 	}
-};
-
-#
-# Public methods
-#
-
-sub new
-{
-	my $class 	= shift(@_);
-
-	my $self = 
-	{
-		_apikey 	=> shift(@_),
-		_domain 	=> shift(@_),
-		_keysite	=> shift(@_),
-		_url		=> 'http://api.anti-captcha.com/',
-	};
-
-	for (keys % { $self })
-	{ $self->{$_} or croak "" .$_. " is required."; }
-
-	bless $self => $class;
-
-	return $self;
-}
-
-sub setopt
-{
-	my $self	= shift(@_);
-	my $opts 	= shift(@_);
-
-	for (keys % { $opts })
-	{$self->{opt}->{$_} = $opts->{$_};}
 }
 
 sub createtask 
@@ -102,7 +97,8 @@ sub createtask
 	%sendit =
 	(
 		clientKey	=> $self->{_apikey},
-		task 		=> {
+		task 		=> 
+		{
 				type 			=> $type,
 				websiteURL		=> $self->{_domain},
 				websiteKey		=> $self->{_keysite},
@@ -112,7 +108,7 @@ sub createtask
 	for (keys % { $self->{opt} })
 	{$sendit{task}{$_} = $self->{opt}->{$_};}
 
-	$self->$_request('/createTask', \%sendit);
+	$self->request('/createTask', \%sendit);
 }
 
 sub checktask
@@ -128,7 +124,7 @@ sub checktask
 		taskId 		=> $task,
 	);
 
-	$self->$_request('/getTaskResult', \%sendit);
+	$self->request('/getTaskResult', \%sendit);
 }
 
 sub waittask
@@ -165,7 +161,7 @@ sub getbalance
 		clientKey	=> $self->{_apikey},
 	);
 
-	$self->$_request('/getBalance', \%sendit);
+	$self->request('/getBalance', \%sendit);
 }
 
 1;
@@ -190,43 +186,42 @@ version 1.00
 
 =head1 SYNOPSIS
 
-use lib ".";
-use ReCaptchaV2;
+	use ReCaptchaV2;
 
-my $captcha;
-my $res;
-my $task;
-my @tasks;
+	my $captcha;
+	my $res;
+	my $task;
+	my @tasks;
 
-$captcha = new ReCaptchaV2
-(
-	"apikey",
-	"domain.com",
-	"google-site-key",
-);
+	$captcha = new ReCaptchaV2
+	(
+		"apikey",
+		"domain.com",
+		"google-site-key",
+	);
 
-$captcha->setopt
-(
-	{
-		'proxyType'		=> 'http',
-		'proxyAddress'		=> 'x.x.x.x',
-		'proxyPort'		=> 'y.y.y.y',
-		'userAgent'		=> 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.141 Safari/537.36',
-	}
-);
+	$captcha->setopt
+	(
+		{
+			'proxyType'		=> 'http',
+			'proxyAddress'		=> 'x.x.x.x',
+			'proxyPort'		=> 'y.y.y.y',
+			'userAgent'		=> 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.141 Safari/537.36',
+		}
+	);
 
-$task = $captcha->createtask();
-print "$task\r\n";
+	$task = $captcha->createtask();
+	print "$task\r\n";
 
-sleep 150;
+	sleep 150;
 
-# Return JSON
-$res = $captcha->checktask($task);
-print "".$res."\r\n";
+	# Return JSON
+	$res = $captcha->checktask($task);
+	print "".$res."\r\n";
 
-# waittask($task);
-# Return when response, only google site code
+	# waittask($task);
+	# Return when response, only google site code
 
-$captcha->getbalance()
+	$captcha->getbalance()
 
-return 0;
+	return 0;
