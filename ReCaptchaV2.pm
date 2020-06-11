@@ -8,36 +8,11 @@ use JSON::MaybeXS;
 use WWW::Mechanize ();
 use Data::Dumper;
 
-sub new
-{
-	my $class 	= shift(@_);
+#
+# Private methods
+#
 
-	my $self = 
-	{
-		_apikey 	=> shift(@_),
-		_domain 	=> shift(@_),
-		_keysite	=> shift(@_),
-		_url		=> 'http://api.anti-captcha.com/',
-	};
-
-	for (keys % { $self })
-	{ $self->{$_} or croak "".$_." is required."; }
-
-	bless $self => $class;
-
-	return $self;
-}
-
-sub setopt
-{
-	my $self	= shift(@_);
-	my $opts 	= shift(@_);
-
-	for (keys % { $opts })
-	{$self->{opt}->{$_} = $opts->{$_};}
-}
-
-sub request
+my $_request = sub
 {
 	my $self	= shift(@_);
 	my $method 	= shift(@_);
@@ -76,6 +51,39 @@ sub request
 	{
 		$rcvit->{errorId} == 0 ? return $rcvit->{balance} : return undef;
 	}
+};
+
+#
+# Public methods
+#
+
+sub new
+{
+	my $class 	= shift(@_);
+
+	my $self = 
+	{
+		_apikey 	=> shift(@_),
+		_domain 	=> shift(@_),
+		_keysite	=> shift(@_),
+		_url		=> 'http://api.anti-captcha.com/',
+	};
+
+	for (keys % { $self })
+	{ $self->{$_} or croak "".$_." is required."; }
+
+	bless $self => $class;
+
+	return $self;
+}
+
+sub setopt
+{
+	my $self	= shift(@_);
+	my $opts 	= shift(@_);
+
+	for (keys % { $opts })
+	{$self->{opt}->{$_} = $opts->{$_};}
 }
 
 sub createtask 
@@ -108,7 +116,7 @@ sub createtask
 	for (keys % { $self->{opt} })
 	{$sendit{task}{$_} = $self->{opt}->{$_};}
 
-	$self->request('/createTask', \%sendit);
+	$self->$_request('/createTask', \%sendit);
 }
 
 sub checktask
@@ -124,7 +132,7 @@ sub checktask
 		taskId 		=> $task,
 	);
 
-	$self->request('/getTaskResult', \%sendit);
+	$self->$_request('/getTaskResult', \%sendit);
 }
 
 sub waittask
@@ -161,7 +169,7 @@ sub getbalance
 		clientKey	=> $self->{_apikey},
 	);
 
-	$self->request('/getBalance', \%sendit);
+	$self->$_request('/getBalance', \%sendit);
 }
 
 1;
