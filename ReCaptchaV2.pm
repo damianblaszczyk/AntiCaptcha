@@ -23,7 +23,15 @@ my $_request = sub
 
 	$json = encode_json $sendit;
 
-	$self->{_browser} = WWW::Mechanize->new();
+	$self->{_browser} = WWW::Mechanize->new
+	(
+		ssl_opts => 
+		{
+			verify_hostname => 0,
+			SSL_verify_mode => 0,
+		},
+		timeout => 15,		
+	);
 	$self->{_browser}->add_header
 	( 
 		'content-type' => 'application/json',
@@ -41,15 +49,15 @@ my $_request = sub
 
 	if ($method eq '/createTask')
 	{
-		$rcvit->{errorId} == 0 ? return $rcvit->{taskId} : return undef;
+		$rcvit->{errorId} == 0 ? return $rcvit->{taskId} : die $rcvit->{errorDescription};
 	}
 	elsif ($method eq '/getTaskResult')
 	{
-		$rcvit->{errorId} == 0 ? return $self->{_browser}->response()->decoded_content() : return undef;
+		$rcvit->{errorId} == 0 ? return $self->{_browser}->response()->decoded_content() : die $rcvit->{errorDescription};
 	}
 	elsif ($method eq '/getBalance')
 	{
-		$rcvit->{errorId} == 0 ? return $rcvit->{balance} : return undef;
+		$rcvit->{errorId} == 0 ? return $rcvit->{balance} : die $rcvit->{errorDescription};
 	}
 };
 
