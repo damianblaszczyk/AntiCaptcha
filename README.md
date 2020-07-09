@@ -41,7 +41,8 @@ http://api.anti-captcha.com/
 		# setopt save param in request, if you use new setopt old params be deleted
 		# clientKey is always in request, you don't declare in setopt
 		$captcha->setopt({ type=>'NoCaptchaTaskProxyless', 
-		websiteURL=>'https://domain.com', websiteKey=>'6Lc0SxgUAA2AANZc3armJOAlR-_KRLQZpQ8XWWMk' });
+		websiteURL=>'https://domain.com', 
+		websiteKey=>'6Lc0SxgUAA2AANZc3armJOAlR-_KRLQZpQ8XWWMk' });
 
 		# Create new task
 		$res = $captcha->createtask();
