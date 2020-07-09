@@ -1,11 +1,9 @@
 # PerlAutoReCaptchaV2
 
-Module to solving Google ReCaptchaV2
+AntiCaptcha - Automatic solving captcha from many websites.
+Module for PERL.
 
 http://api.anti-captcha.com/
-
-[api params](https://anticaptcha.atlassian.net/wiki/spaces/API/pages/5079089/NoCaptchaTask+Google+Recaptcha+puzzle+solving)
-
 
 ```perl
 	use warnings;
