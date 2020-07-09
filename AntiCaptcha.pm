@@ -89,8 +89,8 @@ sub new
 
 sub setdebug
 {
-	my $self	= shift(@_);
-	$self->{_dump} = $_[0];
+	my $self		= shift(@_);
+	$self->{_dump} 	= $_[0];
 }
 
 sub setopt
