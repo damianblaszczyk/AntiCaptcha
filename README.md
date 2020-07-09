@@ -1,4 +1,4 @@
-# PerlAutoReCaptchaV2
+# AntiCaptcha
 
 AntiCaptcha - Automatic solving captcha from many websites.
 Module for PERL.
