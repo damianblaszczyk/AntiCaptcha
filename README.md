@@ -18,7 +18,7 @@ http://api.anti-captcha.com/
 		my $task;
 		my $balance;
 
-		$captcha = new ReCaptchaV2
+		$captcha = new AntiCaptcha
 		(
 			# Your API key
 			"93079f5443ae3c7a8c8wb9gbw3deg09f",
