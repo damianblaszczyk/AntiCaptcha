@@ -16,12 +16,11 @@ my $_request = sub
 {
 	my $self	= shift(@_);
 	my $method 	= shift(@_);
-	my $sendit 	= shift(@_);
 
 	my $json;
 	my $rcvit;
 
-	$json = encode_json $sendit;
+	$json = encode_json $_[0];
 
 	$self->{_browser} = WWW::Mechanize->new
 	(
@@ -96,12 +95,11 @@ sub setdebug
 sub setopt
 {
 	my $self	= shift(@_);
-	my $opts 	= shift(@_);
 
 	delete $self->{opt};
 
-	for (keys % { $opts })
-	{$self->{opt}->{$_} = $opts->{$_};}
+	for (keys % { $_[0] })
+	{$self->{opt}->{$_} = $_[0]->{$_};}
 }
 
 sub createtask 
@@ -145,7 +143,6 @@ sub checktask
 sub getbalance
 {
 	my $self	= shift(@_);
-	my $task 	= shift(@_);
 
 	my %sendit;
 
@@ -308,7 +305,7 @@ version 1.00
 		my $task;
 		my $balance;
 
-		$captcha = new ReCaptchaV2
+		$captcha = new AntiCaptcha
 		(
 			# Your API key
 			"93079f5443ae3c7a8c8wb9gbw3deg09f",
