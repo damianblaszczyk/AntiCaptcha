@@ -5,7 +5,7 @@ use strict;
 use Carp;
 use JSON::MaybeXS;
 
-use WWW::Mechanize ();
+use WWW::Mechanize;
 use Data::Dumper;
 
 #
@@ -79,7 +79,7 @@ sub new
 	};
 
 	for (keys % { $self })
-	{ $self->{$_} or croak "".$_." is required."; }
+	{ $self->{$_} or croak "@{ [ $_ ] } is required."; }
 
 	bless $self => $class;
 
